@@ -122,6 +122,22 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <!-- Opcional: fija el main (solo si tu estructura es rara)
+                <configuration>
+                  <mainClass>com.nigma.gymwise.GymWise.GymWiseApplication</mainClass>
+                </configuration>
+                -->
+            </plugin>
 		</plugins>
 	</build>
 </project>
