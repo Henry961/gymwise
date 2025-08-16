@@ -1,6 +1,7 @@
 package com.nigma.gymwise.GymWise.infrastucture.rest;
 
-import com.nigma.gymwise.GymWise.infrastucture.UserDTO;
+import com.nigma.gymwise.GymWise.infrastucture.dto.JWTClient;
+import com.nigma.gymwise.GymWise.infrastucture.dto.UserDTO;
 import com.nigma.gymwise.GymWise.infrastucture.jwt.JWTGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserDTO userDTO){
+    public ResponseEntity<JWTClient> login(@RequestBody UserDTO userDTO){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userDTO.username(), userDTO.password())
         );
@@ -37,7 +38,9 @@ public class LoginController {
 
         String token = jwtGenerator.getToken(userDTO.username());
 
-        return new ResponseEntity<>("Usuario logueado satisfactoriamente: "+token, HttpStatus.OK);
+        JWTClient jwtClient = new JWTClient(token);
+
+        return new ResponseEntity<>(jwtClient, HttpStatus.OK);
 
     }
 
