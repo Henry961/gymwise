@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nigma.gymwise.GymWise.domain.model.UserProfile;
 import com.nigma.gymwise.GymWise.domain.port.IUserRepository;
 import com.nigma.gymwise.GymWise.infrastucture.adapter.IUserCrudRepository;
+import com.nigma.gymwise.GymWise.infrastucture.dto.FindDataPlanUserDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -134,18 +135,22 @@ public class UserService {
         this.javaMailSender = javaMailSender;
     }
 
-//    @Scheduled(cron = "0 */2 * * * ?")
+    @Scheduled(cron = "0 */2 * * * ?")
     public void notificacionEmail() {
         System.out.println("Inicio de CRON");
 
         try {
-            WorkoutPlan plan = generarPlan();
-            procesarPlan(plan);
 
             List<String> emails = iUserCrudRepository.findEmailDateExpired();
             System.out.println("Emails obtenidos: " + emails);
 
             for(String email : emails) {
+
+                FindDataPlanUserDTO findDataPlanUserDTO = iUserCrudRepository.findDataPlanUser(email);
+
+                WorkoutPlan plan = generarPlan(email, findDataPlanUserDTO);
+                procesarPlan(plan);
+
                 enviarEmail(email, plan);
             }
 
@@ -209,13 +214,13 @@ public class UserService {
         return sb.toString();
     }
 
-    public WorkoutPlan generarPlan() throws JsonProcessingException {
+    public WorkoutPlan generarPlan(String email, FindDataPlanUserDTO findDataPlanUserDTO) throws JsonProcessingException {
         String promptPersonalizado = String.format(
                 PROMPT,
-                30,
-                65.0,
-                "Ganar masa muscular",
-                "Asma, Rotura ligamento posterior en rodilla"
+                findDataPlanUserDTO.getAGE(),
+                findDataPlanUserDTO.getWEIGHT(),
+                findDataPlanUserDTO.getGOAL(),
+                findDataPlanUserDTO.getLIMITATION()
         );
 
         String rawResponse = enviarAGemini(promptPersonalizado);

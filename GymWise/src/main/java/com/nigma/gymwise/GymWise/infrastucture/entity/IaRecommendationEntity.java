@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "ia_recommendation")
 @Data
@@ -20,5 +22,8 @@ public class IaRecommendationEntity {
 
     @Column(name = "recommendation_text")
     private String recommendationText;
+
+    @Column(name = "date_created")
+    private Date dateCreated;
 
 }
