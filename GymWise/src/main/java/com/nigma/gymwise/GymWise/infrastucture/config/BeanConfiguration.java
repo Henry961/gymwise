@@ -3,12 +3,15 @@ package com.nigma.gymwise.GymWise.infrastucture.config;
 import com.nigma.gymwise.GymWise.application.*;
 import com.nigma.gymwise.GymWise.domain.port.*;
 import com.nigma.gymwise.GymWise.infrastucture.adapter.IUserCrudRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.multipart.MultipartFile;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration
 public class BeanConfiguration {
@@ -40,6 +43,15 @@ public class BeanConfiguration {
 
     public ExerciseMachineService exerciseMachineService(IExerciseMachineRepository iExerciseMachineRepository, UploadFile uploadFile){
         return new ExerciseMachineService(iExerciseMachineRepository, uploadFile);
+    }
+
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info().title("GymWise API").version("1.0").description("Documentación de los servicios de GymWise"))
+                .addSecurityItem(new SecurityRequirement().addList("BearerAuth")).components(new Components()
+                .addSecuritySchemes("BearerAuth", new SecurityScheme().name("BearerAuth").type(SecurityScheme.Type.HTTP)
+                .scheme("bearer").bearerFormat("JWT")));
     }
 
 }
