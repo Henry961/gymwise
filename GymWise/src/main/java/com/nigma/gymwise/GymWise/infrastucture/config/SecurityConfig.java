@@ -33,7 +33,11 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/user/save").permitAll()
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
+                        .requestMatchers("/swagger-resources/**").permitAll()
+                        .requestMatchers("/webjars/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/user/**").hasAnyRole("1", "2")
                         .requestMatchers("/api/user/**", "/api/rol/**", "/api/membershiptype/**", "/api/typedocument/**").hasRole("1")
                         .requestMatchers(HttpMethod.GET, "/api/exercise/**", "/api/exercisemachine/**", "/api/exercisemachinerelation/**").hasAnyRole("1", "2", "3")
