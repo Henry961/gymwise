@@ -135,7 +135,7 @@ public class UserService {
         this.javaMailSender = javaMailSender;
     }
 
-    @Scheduled(cron = "0 */2 * * * ?")
+    @Scheduled(cron = "0 0 8 * * ?")
     public void notificacionEmail() {
         System.out.println("Inicio de CRON");
 
